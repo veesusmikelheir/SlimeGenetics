@@ -9,8 +9,8 @@ namespace SlimeGenetics.API
     public abstract class SlimeTrait
     {
         public SlimeTraitProcessor Processor { get; }
-        public abstract String DisplayName { get; }
-        public abstract Color DisplayColor { get;  }
+        public virtual String DisplayName => Processor.GetTraitDisplayName(this);
+        public virtual Color DisplayColor => Processor.GetTraitDisplayColor(this);
         public virtual bool ShouldDisplay { get; } = true;
         public virtual bool ShouldApply { get; } = true;
 
@@ -23,30 +23,20 @@ namespace SlimeGenetics.API
     {
         public virtual T Value { get; set; }
 
-        string name;
-        public override string DisplayName => name + " " + Value;
+        public override string DisplayName => base.DisplayName + " " + Value;
 
-        public override Color DisplayColor { get; }
-        public ValuedSlimeTrait(SlimeTraitProcessor processor, T value,string name, Color color) : base(processor)
+        public ValuedSlimeTrait(SlimeTraitProcessor processor, T value) : base(processor)
         {
-            this.name = name;
             Value = value;
-            DisplayColor = color;
         }
     }
 
     public class BooleanSlimeTrait : SlimeTrait
     {
-        public BooleanSlimeTrait(SlimeTraitProcessor processor,bool enabled,string name, Color displayColor)  : base(processor)
+        public BooleanSlimeTrait(SlimeTraitProcessor processor,bool enabled)  : base(processor)
         {
             Enabled = enabled;
-            DisplayName = name;
-            DisplayColor = displayColor;
         }
-
-        public override string DisplayName { get; }
-
-        public override Color DisplayColor { get; }
 
         public bool Enabled { get; set; }
 

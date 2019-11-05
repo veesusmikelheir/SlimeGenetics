@@ -21,7 +21,7 @@ namespace SlimeGenetics
 
         public override void PreLoad()
         {
-            IntermodCommunication.RegisterIntermodMethod("print_out_epic_stuff", (string x) => Debug.Log($"Printing out {x} for {IntermodCommunication.CallingMod}"));
+            
         }
     }
 }
