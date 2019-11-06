@@ -1,4 +1,4 @@
-﻿using MonomiPark.SlimeRancher.Regions;
+﻿
 using SRML.SR.SaveSystem.Data;
 using System;
 using System.Collections.Generic;
@@ -16,18 +16,61 @@ namespace SlimeGenetics.API
 
         internal void AddTrait(SlimeTrait trait) => Traits.Add(trait);
 
+        public SlimeTrait this[string index]
+        {
+            get
+            {
+                return Traits.FirstOrDefault(x => x.Processor.FullID == index);
+            }
+            set
+            {
+                var trait = Traits.FirstOrDefault(x => x.Processor.FullID == index);
+                if (trait == null) return;
+                Traits.Remove(trait);
+                Traits.Add(value);
+            }
+        }
+
         public static SlimeGenome GetBaseGenome()
         {
             var genome = new SlimeGenome();
             foreach(var p in SlimeTraitRegistry.Processors)
             {
-                genome.AddTrait(p.GetDefaultTrait());
+                genome.AddTrait(p.CreateDefaultTrait());
             }
             return genome;
 
         }
 
+        public static SlimeGenome CombineGenomes(SlimeGenome original, SlimeGenome other)
+        {
+            var spliceSettings = new SpliceSettings();
+            var newGenome = GetBaseGenome();
+            foreach (var trait in original.AllTraits) trait.Processor.AssembleSpliceSettings(trait, spliceSettings);
+            foreach(var trait in original.AllTraits)
+            {
+                newGenome[trait.FullID] = trait.Processor.CombineTraits(trait, other[trait.FullID], spliceSettings);
+            }
+            return newGenome;
+        }
+
         private SlimeGenome() { }
+
+        public void ConfigureGenome(GameObject obj)
+        {
+            foreach(var v in Traits)
+            {
+                v.Processor.ConfigureSlimeTrait(v, obj);
+            }
+        }
+
+        public void ApplyGenome(GameObject obj)
+        {
+            foreach(var v in Traits)
+            {
+                v.Processor.ApplyToGameObject(v, obj);
+            }
+        }
 
         public void ReadGenome(CompoundDataPiece piece)
         {
@@ -43,6 +86,7 @@ namespace SlimeGenetics.API
         {
             foreach(var v in Traits)
             {
+                if (!v.ShouldBeSaved) continue;
                 v.Processor.SerializeTrait(v, piece.GetCompoundPiece(v.Processor.FullID));
             }
         } 

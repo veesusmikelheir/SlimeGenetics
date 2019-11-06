@@ -11,8 +11,15 @@ namespace SlimeGenetics.API
         public SlimeTraitProcessor Processor { get; }
         public virtual String DisplayName => Processor.GetTraitDisplayName(this);
         public virtual Color DisplayColor => Processor.GetTraitDisplayColor(this);
+        public virtual int DisplayPriority => Processor.GetTraitDisplayPriority(this);
+        public virtual string Description => Processor.GetTraitDescription(this);
+
+        public virtual string FullID => Processor.FullID;
+
+
+        public virtual bool ShouldBeSaved => Processor.TraitNeedsToBeSaved(this);
         public virtual bool ShouldDisplay { get; } = true;
-        public virtual bool ShouldApply { get; } = true;
+
 
         public SlimeTrait(SlimeTraitProcessor processor)
         {
@@ -23,8 +30,7 @@ namespace SlimeGenetics.API
     {
         public virtual T Value { get; set; }
 
-        public override string DisplayName => base.DisplayName + " " + Value;
-
+        
         public ValuedSlimeTrait(SlimeTraitProcessor processor, T value) : base(processor)
         {
             Value = value;
@@ -41,7 +47,5 @@ namespace SlimeGenetics.API
         public bool Enabled { get; set; }
 
         public override bool ShouldDisplay => Enabled;
-
-        public override bool ShouldApply => Enabled;
     }
 }
