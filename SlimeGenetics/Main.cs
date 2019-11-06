@@ -1,5 +1,6 @@
 ﻿using InControl;
 using SlimeGenetics.API;
+using SlimeGenetics.SlimeTraits;
 using SRML;
 using SRML.SR;
 using SRML.SR.SaveSystem;
@@ -26,7 +27,8 @@ namespace SlimeGenetics
         public override void PreLoad()
         {
 
-            //SlimeTraitRegistry.Register(new ClimateTraitProcessor(SRModInfo.GetCurrentInfo().Id, "diet"));
+            SlimeTraitRegistry.Register(new DietTraitProcessor(SRModInfo.GetCurrentInfo().Id, "diet"));
+            SlimeTraitRegistry.Register(new TemperamentTraitProcessor(SRModInfo.GetCurrentInfo().Id, "temperament"));
 
             SRCallbacks.OnActorSpawn += SRCallbacks_OnActorSpawn;
             SRCallbacks.OnSaveGameLoaded += (s) => s.Player.AddComponent<GenomeViewer>();

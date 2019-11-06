@@ -38,7 +38,11 @@ namespace SlimeGenetics
             var contentPanel = obj.transform.GetChild(0).GetChild(0).GetChild(0).GetChild(0);
             foreach(var v in genome.AllTraits.Where(x=>x.ShouldDisplay).OrderBy(x=>x.DisplayPriority))
             {
-                CreateTraitInstance(v).transform.SetParent(contentPanel);
+                var panel = CreateTraitInstance(v);
+                panel.transform.SetParent(contentPanel);
+                var descHandler = panel.AddComponent<ShowTraitDescription>();
+                descHandler.genome = genome;
+                descHandler.belongingTrait = v.FullID;
             }
             return obj;
         }

@@ -64,6 +64,14 @@ namespace SlimeGenetics.API
             }
         }
 
+        public void TransformGenome(GameObject obj)
+        {
+            foreach(var v in Traits)
+            {
+                v.Processor.MaybeTransformSlimeTrait(v, obj);   
+            }
+        }
+
         public void ApplyGenome(GameObject obj)
         {
             foreach(var v in Traits)

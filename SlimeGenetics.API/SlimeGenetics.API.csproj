@@ -51,6 +51,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SlimeTraitProcessor.cs" />
     <Compile Include="SlimeTraitRegistry.cs" />
+    <Compile Include="SpliceSettings.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
